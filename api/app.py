@@ -10,13 +10,15 @@ import time
 siteroot='/api/'
 def create_app(test_config=None):
     app = Flask(__name__)
-    app.config.update(
-        TEMPLATES_AUTO_RELOAD=True
-    )
+    #app.config.update(
+    #    TEMPLATES_AUTO_RELOAD=True
+    #)
     logging.basicConfig(stream=sys.stdout,
     level=logging.DEBUG,datefmt='%T %D',
     format='%(asctime)s %(levelname)s %(message)s')
     logger=logging.getLogger()
+    return app
+
     with open(siteroot+"buttons.json") as f:
         app.screens=json.load(f)
     with open(siteroot+'cmdtemplates.json') as f:
@@ -29,8 +31,8 @@ def create_app(test_config=None):
             app.buttons.append(button)
     return app
 
-logger=logging.getLogger()
 app=create_app()
+logger=logging.getLogger()
 logger.info("Flask app created")
 
 @app.route('/poll')
@@ -54,7 +56,7 @@ def get_config():
 
 @app.route('/',methods=['GET'])
 def render():
-    return render_template('index.html')
+    return render_template('index1.html')
 
 @app.route('/button',methods=['POST'])
 def button():
