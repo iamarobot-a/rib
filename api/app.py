@@ -7,7 +7,7 @@ import os
 import datetime as dt
 import time
 
-siteroot='/home/garageland/mysite/'
+siteroot='/api/'
 def create_app(test_config=None):
     app = Flask(__name__)
     app.config.update(
@@ -16,7 +16,7 @@ def create_app(test_config=None):
     logging.basicConfig(stream=sys.stdout,
     level=logging.DEBUG,datefmt='%T %D',
     format='%(asctime)s %(levelname)s %(message)s')
-
+    logger=logging.getLogger()
     with open(siteroot+"buttons.json") as f:
         app.screens=json.load(f)
     with open(siteroot+'cmdtemplates.json') as f:
@@ -31,6 +31,7 @@ def create_app(test_config=None):
 
 logger=logging.getLogger()
 app=create_app()
+logger.info("Flask app created")
 
 @app.route('/poll')
 def long_poll():
