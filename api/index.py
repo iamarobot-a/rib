@@ -7,36 +7,17 @@ import os
 import datetime as dt
 import time
 
-siteroot='/api/'
-def create_app(test_config=None):
-    app = Flask(__name__)
-    #app.config.update(
-    #    TEMPLATES_AUTO_RELOAD=True
-    #)
-    logging.basicConfig(stream=sys.stdout,
-    level=logging.DEBUG,datefmt='%T %D',
-    format='%(asctime)s %(levelname)s %(message)s')
-    logger=logging.getLogger()
-    return app
-
-    with open(siteroot+"buttons.json") as f:
-        app.screens=json.load(f)
-    with open(siteroot+'cmdtemplates.json') as f:
-        app.cmdtemplates=json.load(f)
-    app.buttons=[]
-    for screen in app.screens:
-        for button in screen['buttons']:
-            if button.get('tmp') is None:
-                button['tmp']=screen.get('tmp')
-            app.buttons.append(button)
-    return app
-
 app=Flask(__name__)
-logging.basicConfig(stream=sys.stdout,
-level=logging.DEBUG,datefmt='%T %D',
-format='%(asctime)s %(levelname)s %(message)s')
-logger=logging.getLogger()
-logger.info("Flask app created")
+#logging.basicConfig(stream=sys.stdout,
+#    level=logging.DEBUG,datefmt='%T %D',
+#    format='%(asctime)s %(levelname)s %(message)s')
+#logger=logging.getLogger()
+#logger.info("Flask app created")
+
+@app.route('/')
+def home():
+    return 'Hello, World!'
+
 
 @app.route('/poll')
 def long_poll():
@@ -57,9 +38,11 @@ def long_poll():
 def get_config():
     return json.dumps(app.screens)
 
-@app.route('/',methods=['GET'])
-def render():
-    return render_template('index1.html')
+
+
+@app.route('/about')
+def about():
+    return 'About'
 
 @app.route('/button',methods=['POST'])
 def button():
