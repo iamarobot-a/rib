@@ -31,7 +31,10 @@ def create_app(test_config=None):
             app.buttons.append(button)
     return app
 
-app=create_app()
+app=Flask(__name__)
+logging.basicConfig(stream=sys.stdout,
+level=logging.DEBUG,datefmt='%T %D',
+format='%(asctime)s %(levelname)s %(message)s')
 logger=logging.getLogger()
 logger.info("Flask app created")
 
