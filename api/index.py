@@ -16,5 +16,5 @@ def about():
 @app.route('/longpoll')
 def poll():
     t0=dt.datetime.now
-    time.sleep(29)
+    time.sleep(30)
     return(f"start:{t0}<br>I am polly now:{dt.datetime.now}")
