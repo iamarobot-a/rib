@@ -3,21 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name = "viewport" content = "width = device-width, initial-scale = 1.0, maximum-scale = 5.0">
-        <title>We come from garageland</title>
-        <style type="text/css">
-            table {
-                left: 0;
-                right: 0;
-                width: 100%;
-                border-collapse: collapse;
-            }
-            td {
-                border: 1px solid;
-                font-size: 200%;
-                text-align: center;
-            }
-        </style>
-        <script
+        <title>Remote In Browser RIB</title>
+              <script
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
@@ -39,18 +26,17 @@
                     timeout: 1000
                 });
             }
-
-            active_cell=undefined
+          active_cell=undefined
             timerId=setInterval(
                         function() {
                             polly(0)
-                        },200);
+                        },200);   
 
             function polly(){
                 if (active_cell && active_cell.style.backgroundColor=="yellow")
                 {
                     //console.log("polly on "+active_cell["cmd"] )
-                    json=active_cell["json"]
+                    json=active_cell["json"]  
                     sendMsg(json)
                 }
             }
@@ -90,154 +76,9 @@
             function event_none(event) {
                 event.preventDefault()
             }
-
-
-            function generateGrids(screens){
-                placeholder=document.getElementById("screens");
-                tablectr=0
-                buttonctr=0
-                //tables=[]
-                screens.forEach(element => {
-                    console.log(element)
-                    div1=document.createElement('div');
-                    div1.style.display='none'
-                    div1.id="screen_" + element["screen"]
-                    table=document.createElement('table');
-                    //table.id="screen_"+element["screen"];
-                    div1.append(table)
-                    placeholder.append(div1)
-                    buttonctr=generateGrid(element,table,buttonctr)
-                    tablectr=tablectr+1
-                    table.style.display="block"
-                });
-                document.getElementById("screen_1").style.display='block'
-
-                //add control
-                controller=document.getElementById('buttons')
-                if (tablectr>1){
-                    console.log("adding controller, count:"+tablectr)
-                    tbl=document.createElement('table')
-                    tbl.id="screen_control_table"
-                    controller.append(tbl)
-                    row=tbl.insertRow()
-                    for (i=0;i<tablectr;i++){
-                        console.log("add control cell")
-                        cell=row.insertCell()
-                        cell.innerHTML=i+1
-                        cell.onclick=show_click
-                        cell.touch_start=show_click
-                        cell["screen_id"]="screen_"+(i+1)
-                        cell["max"]=tablectr
-                    }
-                } else {
-                    controller.style.display='none'
-                }
-            }
-
-            function show_click(event){
-                event.preventDefault();
-                screen_id=this["screen_id"]
-                max=this["max"]
-                for (i=1;i<=max;i++){
-                    screen=document.getElementById("screen_"+i)
-                    screen.style.display='none'
-                }
-                showscreen=document.getElementById(screen_id)
-                showscreen.style.display='block'
-            }
-
-            function generateGrid(gridData, grid, ctrStart) {
-                screen1=gridData;
-                cellData=screen1["buttons"];
-                colMax=screen1["cols"];
-                cellWidth=Math.floor(100/colMax);
-                aRow=grid.insertRow();
-                if (screen1["header"]){
-                    cell=aRow.insertCell();
-                    cell.innerHTML=screen1["header"]
-                    cell.colSpan=colMax;
-                    aRow=grid.insertRow();
-                }
-                ctr=ctrStart;
-                colCtr=0
-                console.log("generateGrid: screen id: " + screen1["screen"] + " cols:" + colMax)
-                for (let item  of cellData) {
-                    if (item["colspan"]){
-                        current_colspan=parseInt(item["colspan"]);
-                    } else {
-                        current_colspan=1
-                    }
-
-                    nextColCtr=colCtr+current_colspan;
-                    if ((colCtr>=colMax)||(nextColCtr>colMax)){
-                        aRow = grid.insertRow() ;
-                        colCtr=0;
-                        //console.log("build: added new row");
-                    }
-
-                    cell=aRow.insertCell()
-                    cell.innerHTML=item["title"];
-                    colCtr=colCtr+current_colspan;
-                    cell.colSpan=current_colspan;
-                    //console.log("build: title:" +item["title"] + " colCtr after:" +colCtr);
-
-                    cell["tmp"]=item["tmp"]
-                    cell["cmd"]=item["cmd"]
-                    cell["counter"]=ctr;
-                    cell["id"]="btn_"+ctr;
-                    cell["repeat"]=item["repeat"]
-
-                    cell.style.width=cellWidth*current_colspan +"%";
-                    if (item["cmd"]){
-                        //event handler only for the ones with command
-                        cell.ontouchstart = touch_start;
-                        cell.onmousedown = touch_start;
-                        cell.ontouchend = touch_end;
-                        cell.onmouseup = touch_end;
-                        cell.onmouseout = touch_end;
-                        cell.onmouseleave = touch_end;
-                        cell.ontouchcancel = event_none;
-                    }
-                    cell.onclick = event_none;
-                    cell.ondblclick = event_none;
-                    cell.oncontextmenu = event_none;
-                    cell.ontouchmove = event_none;
-                    cell.onmousemove = event_none;
-
-                    ctr=ctr+1;
-                } //end button loop
-            return ctr;
-            }
-
-            var FullPage = document.documentElement;
-            function openFullscreen() {
-                if (FullPage.requestFullscreen) {
-                    FullPage.requestFullscreen();
-                } else if (FullPage.mozRequestFullScreen) { /* Firefox */
-                        FullPage.mozRequestFullScreen();
-                } else if (FullPage.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-                        FullPage.webkitRequestFullscreen();
-                } else if (FullPage.msRequestFullscreen) { /* IE/Edge */
-                        FullPage.msRequestFullscreen();
-                }
-            }
-function start() {
-    $.ajax('/config', {
-        type: 'GET',  // http method
-            data: {},  // data to submit
-            success: function (data, status, xhr) {
-                generateGrids(JSON.parse(data));
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-               $('log').append('<br>get config Error' + errorMessage);
-            }
-    });
-    ;
-}
-</script>
+            </script>
 </head>
-<body onload="javascript:start();" onresize="window.location.reload();" style=" position: relative; ">
-    <div id="buttons" style="padding: 6px 12px; display:block;bottom:0"></div>
-    <div id="screens" style="padding: 6px 12px; display: block;top:0"></div>
-<p id="log"></p>
+<body>
+<div id="screen_4"><table style="display: block;"><tbody><tr><td colspan="3">- KAPUK -</td></tr><tr><td colspan="1" id="btn_39" style="width: 33%;">GATE</td><td colspan="1" id="btn_40" style="width: 33%;"></td><td colspan="1" id="btn_41" style="width: 33%;">gar 4</td></tr><tr><td colspan="1" id="btn_42" style="width: 33%;">gar 1</td><td colspan="1" id="btn_43" style="width: 33%;"></td><td colspan="1" id="btn_44" style="width: 33%;">gar 2</td></tr></tbody></table></div>
 </body>
+</html>
