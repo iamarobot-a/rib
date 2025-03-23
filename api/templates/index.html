@@ -9,6 +9,14 @@
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
         <script type="text/javascript">
+            function sendMsg1(){
+                data={event:'touch start', name:"g 1", btnindex:1};
+                sendMsg(data);
+            };
+            function sendMsg2(){
+                data={event:'touch start', name:"g 2", btnindex:2};
+                sendMsg(data);
+            };
             function sendMsg(json){
                 //console.log("Sending json "+ JSON.stringify(json))
                 $.ajax('/button', {
@@ -26,59 +34,12 @@
                     timeout: 1000
                 });
             }
-          active_cell=undefined
-            timerId=setInterval(
-                        function() {
-                            polly(0)
-                        },200);   
-
-            function polly(){
-                if (active_cell && active_cell.style.backgroundColor=="yellow")
-                {
-                    //console.log("polly on "+active_cell["cmd"] )
-                    json=active_cell["json"]  
-                    sendMsg(json)
-                }
-            }
-
-            function touch_start(event) {
-                event.preventDefault();
-                //console.log('touch_start', this.id, this.innerHTML, event);
-                cell=document.getElementById(this.id);
-                var json ={event:'touch start', name:this.innerHTML, btnindex:this.counter};
-                cell.style.backgroundColor = "yellow";
-                if (cell["repeat"]){
-                    startRepeatMsg(json,cell);
-                }
-                else{
-                    sendMsg(json);
-                }
-            }
-
-            function startRepeatMsg(json,cell){
-                active_cell=cell;
-                active_cell["json"]=json;
-            }
-
-            function stopRepeatMsg(cell){
-                active_cell=undefined
-            }
-
-            function touch_end(event) {
-                cell=document.getElementById(this.id);
-                if (cell){
-                    cell.style.backgroundColor = "white";
-                    stopRepeatMsg(cell);
-                }
-                event.preventDefault();
-            }
-
-            function event_none(event) {
-                event.preventDefault()
-            }
             </script>
 </head>
 <body>
-<div id="screen_4"><table style="display: block;"><tbody><tr><td colspan="3">- KAPUK -</td></tr><tr><td colspan="1" id="btn_39" style="width: 33%;">GATE</td><td colspan="1" id="btn_40" style="width: 33%;"></td><td colspan="1" id="btn_41" style="width: 33%;">gar 4</td></tr><tr><td colspan="1" id="btn_42" style="width: 33%;">gar 1</td><td colspan="1" id="btn_43" style="width: 33%;"></td><td colspan="1" id="btn_44" style="width: 33%;">gar 2</td></tr></tbody></table></div>
+<input type="button" onclick="javascript:sendMsg1()" value="--<= G1 =>--"></input>
+<br>
+<input type="button" onclick="javascript:sendMsg2()" value="--<= G2 =>--"></input>
+
 </body>
 </html>
