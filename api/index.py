@@ -16,14 +16,17 @@ app.config.update(
         TEMPLATES_AUTO_RELOAD=True
     )
 app_command=""
+last_poll=""
+last_command=""
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html',poll=last_poll,command=last_command,now=dt.datetime.now().isoformat())
 
 @app.route('/button',methods=['POST'])
 def button():
-    global app_command
+    global app_command,last_command
+    last_command=dt.datetime.now().isoformat()
     post=request.json
     event=post.get('event')
     btnindex=post.get('btnindex')
@@ -35,7 +38,8 @@ def button():
 
 @app.route('/longpoll')
 def poll():
-    global app_command
+    global app_command,last_poll
+    last_poll=dt.datetime.now().isoformat()
     t0=dt.datetime.now().isoformat()
     ctr=0
     while app_command=="":
